@@ -11,3 +11,62 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* CSS to style the container for the category and difficulty cards */
+
+/* Container Before Cat Selection */
+.card-container {
+  margin: 5% 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 1%;
+}
+
+/* Container After Cat Selection - Before Difficulty Selection*/
+.single-card-container {
+  margin: 5% 10%;
+  display: grid;
+  text-align: center;
+  grid-template-columns: auto auto auto;
+  column-gap: 1%;
+}
+
+.double-card-container {
+  margin: 5% 10%;
+  display: grid;
+  text-align: center;
+  grid-template-columns: auto auto;
+  column-gap: 1%;
+}
+
+/* Cat Cards Before Selection */
+.cat-card {
+  text-align: center;
+}
+
+/* Selected Cat Card Before Difficulty Selection */
+.chosen-card {
+  align-content: center;
+  grid-area: 1 / 1 / span 1 / span 3;
+}
+
+/* Selected Cat Card After Difficulty Selection */
+.chosen-card-post-difficulty {
+  align-content: center;
+}
+
+/* Difficulty Card Before Selection */
+.difficulty-card {
+  display: grid;
+  grid-area: 2 / auto;
+}
+
+/* Difficulty Card After Selection */
+.difficulty-card-after {
+  align-content: center;
+}
+
+/* Cards Not Selected */
+.removed-card {
+  display: none;
+}
