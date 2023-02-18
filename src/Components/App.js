@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Messageboard from "./Messageboard";
 import CategoryCard from "./CategoryCard";
 import DifficultyCard from "./DifficultyCard";
+import AnswerCard from "./AnswerCard";
 
 function App() {
 
@@ -10,6 +11,18 @@ function App() {
   const [removeCatCards, setRemoveCatCards] = useState(false);
   const [APICategory, setAPICategory] = useState("");
   const [removeDiffCards, setRemoveDiffCards] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [incorrectAnswers, setIncorrectAnswers] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [makeQuestion, setMakeQuestion] = useState(false);
+  const [quizStart, setQuizStart] = useState(false);
+  const [score, setScore] = useState(0);
+  const [currentCategory, setCurrentCategory] = useState("");
+  const [previousCategories, setPreviousCategories] = useState([]);
+  const [totalScore, setTotalScore] = useState(0);
   
   const categories = [
     ["Arts & Literature", "arts_and_literature"],
@@ -24,26 +37,131 @@ function App() {
     ["Sport & Leisure", "sport_and_leisure"],
   ];
 
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  // This Hook will trigger when the MakeQuestion state changes to true
+  // The hook changes the states of the CurrentQuestion, CorrectAnswer and 
+  // Answers states each time it is active. The hook then changes the MakeQuestion state
+  // back to false to prevent a continuous loop.
+  useEffect (() => {
+    if (makeQuestion === true) {
+      setCurrentQuestion(questions[questionIndex]["question"]);
+      setCorrectAnswer(questions[questionIndex]["correctAnswer"]);
+      let allAnswers = [];
+      for (let i=0; i<questions[questionIndex]["incorrectAnswers"].length + 1; i++) {
+        if (i < questions[questionIndex]["incorrectAnswers"].length) {
+          allAnswers.push(questions[questionIndex]["incorrectAnswers"][i]);
+        } else {
+          allAnswers.push(questions[questionIndex]["correctAnswer"]);
+        }
+      }
+      shuffle(allAnswers);
+      setAnswers(allAnswers);
+      setTitle("Trivia Quiz - Current Round Score: " + score);
+      setMakeQuestion(false);
+    }
+  })
+  
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  function getQuestions(APIDifficulty) {
+    let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=10&" + APIDifficulty;
+    console.log(url);
+    fetch(url).then((response) => response.json()).then((data) => setQuestions(data));
+  }
+
   // Function to build the category section of the API endpoint
   function endpointCategory(text) {
     setAPICategory("categories=" + text);
   }
 
   // Function passed to the children to manage the category selection
-  function chooseCategory(text) {
+  function chooseCategory(apiText, category) {
     setRemoveCatCards(true);
-    endpointCategory(text);
+    endpointCategory(apiText);
+    setCurrentCategory(category);
   }
 
   function endPointDiff(text) {
     console.log("difficulty=" + text);
+    return ("difficulty=" + text);
   }
 
   function chooseDifficulty(text) { 
     setRemoveDiffCards(true);
-    endPointDiff(text);
+    let diff = endPointDiff(text);
+    getQuestions(diff);
+    sleep(1000).then(() => {
+      setQuizStart(true)
+      setMakeQuestion(true);
+      setMessage("");
+    });
   }
 
+
+  // Function Checks the Answer - Changes the score and Question Index and 
+  // then changes the MakeQuestion boolean to true to trigger the useState() 
+  // function to change the current question
+
+  function checkAnswer(value) {
+    if (value === correctAnswer) {
+      console.log("Ding! Ding! Ding!");
+      setScore((prevValue) =>{
+        return (prevValue + 1);
+      })
+      setTotalScore((prevValue) => {
+        return prevValue + score;
+      });
+      if (questionIndex === 9) {
+        sleep(2000).then(() => {
+          returnToTitle();
+        });
+      } else {
+        setQuestionIndex((prevValue) => {
+          return prevValue + 1;
+        });
+        sleep(2000).then(() => {
+          setMakeQuestion(true);
+        });
+      }
+    } else {
+      console.log("Oh no! :(");
+      if (questionIndex === 9) {
+        sleep(2000).then(() => {
+          returnToTitle();
+        });
+      } else {
+      setQuestionIndex((prevValue) => {
+        return prevValue + 1;
+      });
+      sleep(2000).then(() => {
+        setMakeQuestion(true);
+      });
+    }
+    }
+  }
+
+  // This function returns user to the category choice screen and resets the states
+  // That control the flow of the game in preparation of the next round.
+  function returnToTitle() {
+    setQuizStart(false);
+    setPreviousCategories((prevValue) => {
+      return ([...prevValue, currentCategory]);
+    });
+    setMessage("Please Choose the next category");
+    setAPICategory("");
+    setRemoveCatCards(false);
+    setRemoveDiffCards(false);
+    setQuestionIndex(0);
+    setQuestions([]);
+    setAnswers([]);
+    setTitle("Trivia Quiz - Total Score: " + totalScore);
+  }
+
+
+  // SPA Return Statement
   return (
     <div className="App">
       <Messageboard title={title} message={message} />
@@ -61,6 +179,7 @@ function App() {
             chooseCategory={chooseCategory} // Function to handle category selection
             remove={removeCatCards} // State to show if the cards have been removed from the screen.
             difficultySelected={removeDiffCards}
+            used={previousCategories.includes(category[0]) ? true : false}
           />
         ))}
         {removeCatCards === true ? (
@@ -87,6 +206,17 @@ function App() {
             chooseDifficulty={chooseDifficulty}
           />
         ) : null}
+      </div>
+      <div>
+        {quizStart === true && <p>{currentQuestion}</p>}
+        {answers.map((answer, index) => (
+          <AnswerCard 
+          key={index} 
+          id={index} 
+          text={answer} 
+          checkAnswer={checkAnswer}  
+          />
+        ))}
       </div>
     </div>
   );
