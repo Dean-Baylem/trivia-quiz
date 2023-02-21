@@ -15,7 +15,7 @@ function CategoryCard(props) {
         props.used === true ? "removed-card" : chosen === false ? (props.remove === true ? "removed-card" : "cat-card") : props.difficultySelected === true ? "chosen-card-post-difficulty" : "chosen-card"}
       >
         <p>{props.text}</p>
-        <button onClick={handleClick}>Click Me</button>
+        {!chosen && <button onClick={handleClick}>Click Me</button>}
       </div>
     );
 }

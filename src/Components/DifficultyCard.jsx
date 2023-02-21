@@ -11,7 +11,7 @@ function DifficultyCard(props) {
     return (
       <div className={selected === true ? "difficulty-card-after" : (props.removeDiffCards === true ? "removed-card" : "difficulty-card")}>
         <h5>{props.text}</h5>
-        <button onClick={handleClick}>Click Me!</button>
+        {!selected && <button onClick={handleClick}>Click Me!</button>}
       </div>
     );
 }

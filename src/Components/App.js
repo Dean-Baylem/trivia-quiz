@@ -3,6 +3,7 @@ import Messageboard from "./Messageboard";
 import CategoryCard from "./CategoryCard";
 import DifficultyCard from "./DifficultyCard";
 import AnswerCard from "./AnswerCard";
+import GameOverModal from "./GameOverModal";
 
 function App() {
 
@@ -14,7 +15,6 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState("");
-  const [incorrectAnswers, setIncorrectAnswers] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [makeQuestion, setMakeQuestion] = useState(false);
@@ -23,7 +23,10 @@ function App() {
   const [currentCategory, setCurrentCategory] = useState("");
   const [previousCategories, setPreviousCategories] = useState([]);
   const [totalScore, setTotalScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
   
+  // The array stores the value to be shown on buttons and the value to be used
+  // when calling the Quiz API for question generation.
   const categories = [
     ["Arts & Literature", "arts_and_literature"],
     ["Film & TV", "film_and_tv"],
@@ -40,6 +43,15 @@ function App() {
   function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
   }
+ 
+
+  // Hook to check for if the Game has finished and change the state of gameOver to true.
+  useEffect(() => {
+    if (previousCategories.length === 10) {
+      console.log("Game over")
+      setGameOver(true);
+    }
+  })
 
   // This Hook will trigger when the MakeQuestion state changes to true
   // The hook changes the states of the CurrentQuestion, CorrectAnswer and 
@@ -112,7 +124,7 @@ function App() {
         return (prevValue + 1);
       })
       setTotalScore((prevValue) => {
-        return prevValue + score;
+        return prevValue + 1;
       });
       if (questionIndex === 9) {
         sleep(2000).then(() => {
@@ -146,25 +158,39 @@ function App() {
   // This function returns user to the category choice screen and resets the states
   // That control the flow of the game in preparation of the next round.
   function returnToTitle() {
-    setQuizStart(false);
-    setPreviousCategories((prevValue) => {
-      return ([...prevValue, currentCategory]);
+    sleep(1000).then(() => {
+      setQuizStart(false);
+      setPreviousCategories((prevValue) => {
+        return [...prevValue, currentCategory];
+      });
+      setMessage("Please Choose the next category");
+      setAPICategory("");
+      setRemoveCatCards(false);
+      setRemoveDiffCards(false);
+      setQuestionIndex(0);
+      setQuestions([]);
+      setAnswers([]);
+      setScore(0);
     });
-    setMessage("Please Choose the next category");
-    setAPICategory("");
-    setRemoveCatCards(false);
-    setRemoveDiffCards(false);
-    setQuestionIndex(0);
-    setQuestions([]);
-    setAnswers([]);
-    setTitle("Trivia Quiz - Total Score: " + totalScore);
   }
 
+  useEffect(() => {
+    if (quizStart === false) {
+      setTitle("Trivia Quiz - Total Score: " + totalScore)
+    }
+  })
+
+  function testClick() {
+    sleep(2000).then(() => {
+      setGameOver(true);
+    })
+  }
 
   // SPA Return Statement
   return (
     <div className="App">
       <Messageboard title={title} message={message} />
+      {gameOver && <GameOverModal total={totalScore} />}
       <div
         className={
           removeDiffCards === true ? "double-card-container" : (removeCatCards === false ? "card-container" : "single-card-container")
@@ -218,6 +244,7 @@ function App() {
           />
         ))}
       </div>
+      <button onClick={testClick}>Click me to test!</button>
     </div>
   );
 }
