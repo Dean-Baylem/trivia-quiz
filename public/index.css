@@ -39,35 +39,11 @@ code {
   column-gap: 1%;
 }
 
-/* Cat Cards Before Selection */
-.cat-card {
-  text-align: center;
-}
-
-/* Selected Cat Card Before Difficulty Selection */
-.chosen-card {
-  align-content: center;
-  grid-area: 1 / 1 / span 1 / span 3;
-}
-
-/* Selected Cat Card After Difficulty Selection */
-.chosen-card-post-difficulty {
-  align-content: center;
-}
-
-/* Difficulty Card Before Selection */
-.difficulty-card {
-  display: grid;
-  grid-area: 2 / auto;
-}
-
-/* Difficulty Card After Selection */
-.difficulty-card-after {
-  align-content: center;
-}
-
 /* Cards Not Selected */
 .removed-card {
   display: none;
 }
 
+body {
+  font-family: 'Quicksand';
+}

@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import "./DifficultyCard.css";
 
 function DifficultyCard(props) {
 
@@ -9,9 +10,17 @@ function DifficultyCard(props) {
         props.chooseDifficulty(props.apitext);
     }
     return (
-      <div className={selected === true ? "difficulty-card-after" : (props.removeDiffCards === true ? "removed-card" : "difficulty-card")}>
+      <div
+        onClick={handleClick}
+        className={
+          selected === true
+            ? "difficulty-card-after diff-btn no-hover"
+            : props.removeDiffCards === true
+            ? "removed-card"
+            : "difficulty-card diff-btn"
+        }
+      >
         <h5>{props.text}</h5>
-        {!selected && <button onClick={handleClick}>Click Me!</button>}
       </div>
     );
 }

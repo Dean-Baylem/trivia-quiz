@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
-import Messageboard from "./Messageboard";
-import CategoryCard from "./CategoryCard";
-import DifficultyCard from "./DifficultyCard";
-import AnswerCard from "./AnswerCard";
+import Messageboard from "./MessageBoard/Messageboard";
+import CategoryCard from "./CategoryCard/CategoryCard";
+import DifficultyCard from "./DifficultyCard/DifficultyCard";
+import AnswerCard from "./AnswerCard/AnswerCard";
 import GameOverModal from "./GameOverModal";
+import QuestionBoard from "./QuestionBoard/QuestionBoard";
 
 function App() {
   
@@ -69,7 +70,9 @@ function App() {
   // Title Update useEffect Hook
   useEffect(() => {
     if (quizStart === false) {
-      setTitle("Trivia Quiz - Total Score: " + totalScore);
+      setMessage("Total Score: " + totalScore);
+    } else {
+      setMessage("Current Round Score: " + score + " / 10")
     }
   });
 
@@ -151,28 +154,28 @@ function App() {
         } 
       });
       if (questionIndex === 9) {
-        sleep(2000).then(() => {
+        sleep(1000).then(() => {
           returnToTitle();
         });
       } else {
         setQuestionIndex((prevValue) => {
           return prevValue + 1;
         });
-        sleep(2000).then(() => {
+        sleep(1000).then(() => {
           setMakeQuestion(true);
         });
       }
     } else {
       console.log("Oh no! :(");
       if (questionIndex === 9) {
-        sleep(2000).then(() => {
+        sleep(1000).then(() => {
           returnToTitle();
         });
       } else {
       setQuestionIndex((prevValue) => {
         return prevValue + 1;
       });
-      sleep(2000).then(() => {
+      sleep(1000).then(() => {
         setMakeQuestion(true);
       });
     }
@@ -200,7 +203,7 @@ function App() {
 
   // Function to be used for various tests as required.
   function testClick() {
-    sleep(2000).then(() => {
+    sleep(1000).then(() => {
       setGameOver(true);
     })
   }
@@ -208,7 +211,7 @@ function App() {
   // SPA Return Statement
   return (
     <div className="App">
-      <Messageboard title={title} message={message} />
+      <Messageboard title={title} message={message} started={quizStart}/>
       {gameOver && <GameOverModal total={totalScore} />}
       <div
         className={
@@ -253,19 +256,22 @@ function App() {
         ) : null}
       </div>
       <div>
-        {quizStart === true && <p>{currentQuestion}</p>}
+        {quizStart === true && <QuestionBoard question={currentQuestion}/>}
         {answers.map((answer, index) => (
           <AnswerCard 
           key={index} 
           id={index} 
           text={answer} 
-          checkAnswer={checkAnswer}  
+          checkAnswer={checkAnswer}
+          correctAnswer={correctAnswer}  
           />
         ))}
       </div>
-      <button onClick={testClick}>Click me to test!</button>
     </div>
   );
 }
 
 export default App;
+
+
+{/* <button onClick={testClick}>Click me to test!</button>; */}
