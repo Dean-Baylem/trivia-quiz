@@ -6,22 +6,32 @@ import AnswerCard from "./AnswerCard";
 import GameOverModal from "./GameOverModal";
 
 function App() {
-
+  
+  // States for use in Messageboard Component
   const [title, setTitle] = useState("Welcome to the Trivia Quiz");
   const [message, setMessage] = useState("Select one of the categories below, then select a difficulty from; easy, medium or hard. After this you will be shown 10 questions to answer. Good luck!");
+  
+  // States for Quiz Start Procedure
   const [removeCatCards, setRemoveCatCards] = useState(false);
-  const [APICategory, setAPICategory] = useState("");
   const [removeDiffCards, setRemoveDiffCards] = useState(false);
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState("");
-  const [correctAnswer, setCorrectAnswer] = useState("");
-  const [answers, setAnswers] = useState([]);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [makeQuestion, setMakeQuestion] = useState(false);
-  const [quizStart, setQuizStart] = useState(false);
-  const [score, setScore] = useState(0);
   const [currentCategory, setCurrentCategory] = useState("");
   const [previousCategories, setPreviousCategories] = useState([]);
+  const [quizStart, setQuizStart] = useState(false);
+  const [currentDifficulty, setCurrentDifficulty] = useState("");
+  
+  // API building State
+  const [APICategory, setAPICategory] = useState("");
+
+  // States for use During Quiz
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [makeQuestion, setMakeQuestion] = useState(false);
+  
+  // States for maintaining Score and End of Game
+  const [score, setScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   
@@ -40,12 +50,15 @@ function App() {
     ["Sport & Leisure", "sport_and_leisure"],
   ];
 
+  // Function to provide a delay if required.
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Function to shuffle the order of an array.
   function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
   }
- 
 
-  // Hook to check for if the Game has finished and change the state of gameOver to true.
+  // Start GameOver useState Hook
   useEffect(() => {
     if (previousCategories.length === 10) {
       console.log("Game over")
@@ -53,10 +66,15 @@ function App() {
     }
   })
 
-  // This Hook will trigger when the MakeQuestion state changes to true
-  // The hook changes the states of the CurrentQuestion, CorrectAnswer and 
-  // Answers states each time it is active. The hook then changes the MakeQuestion state
-  // back to false to prevent a continuous loop.
+  // Title Update useEffect Hook
+  useEffect(() => {
+    if (quizStart === false) {
+      setTitle("Trivia Quiz - Total Score: " + totalScore);
+    }
+  });
+
+
+  // Create Question Hook
   useEffect (() => {
     if (makeQuestion === true) {
       setCurrentQuestion(questions[questionIndex]["question"]);
@@ -76,7 +94,6 @@ function App() {
     }
   })
   
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function getQuestions(APIDifficulty) {
     let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=10&" + APIDifficulty;
@@ -105,6 +122,7 @@ function App() {
     setRemoveDiffCards(true);
     let diff = endPointDiff(text);
     getQuestions(diff);
+    setCurrentDifficulty(text);
     sleep(1000).then(() => {
       setQuizStart(true)
       setMakeQuestion(true);
@@ -124,7 +142,13 @@ function App() {
         return (prevValue + 1);
       })
       setTotalScore((prevValue) => {
-        return prevValue + 1;
+        if (currentDifficulty === "easy") {
+          return prevValue + 1;
+        } else if (currentDifficulty === "medium") {
+          return prevValue + 2;
+        } else if (currentDifficulty === "hard") {
+          return prevValue + 3;
+        } 
       });
       if (questionIndex === 9) {
         sleep(2000).then(() => {
@@ -174,12 +198,7 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    if (quizStart === false) {
-      setTitle("Trivia Quiz - Total Score: " + totalScore)
-    }
-  })
-
+  // Function to be used for various tests as required.
   function testClick() {
     sleep(2000).then(() => {
       setGameOver(true);
