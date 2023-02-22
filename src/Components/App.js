@@ -3,7 +3,7 @@ import Messageboard from "./MessageBoard/Messageboard";
 import CategoryCard from "./CategoryCard/CategoryCard";
 import DifficultyCard from "./DifficultyCard/DifficultyCard";
 import AnswerCard from "./AnswerCard/AnswerCard";
-import GameOverModal from "./GameOverModal";
+import GameOverModal from "./GameOverModal/GameOverModal";
 import QuestionBoard from "./QuestionBoard/QuestionBoard";
 
 function App() {
