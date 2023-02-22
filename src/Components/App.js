@@ -36,6 +36,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [restart, setRestart] = useState(false);
   
   // The array stores the value to be shown on buttons and the value to be used
   // when calling the Quiz API for question generation.
@@ -65,6 +66,8 @@ function App() {
     if (previousCategories.length === 10) {
       console.log("Game over")
       setGameOver(true);
+    } else if (previousCategories.length === 0) {
+      setGameOver(false);
     }
   })
 
@@ -108,7 +111,7 @@ function App() {
   
 
   function getQuestions(APIDifficulty) {
-    let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=10&" + APIDifficulty;
+    let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=1&" + APIDifficulty;
     console.log(url);
     fetch(url).then((response) => response.json()).then((data) => setQuestions(data));
   }
@@ -162,7 +165,7 @@ function App() {
           return prevValue + 3;
         } 
       });
-      if (questionIndex === 9) {
+      if (questionIndex === 0) {
         sleep(1000).then(() => {
           returnToTitle();
         });
@@ -176,7 +179,7 @@ function App() {
       }
     } else {
       console.log("Oh no! :(");
-      if (questionIndex === 9) {
+      if (questionIndex === 0) {
         sleep(1000).then(() => {
           returnToTitle();
         });
@@ -217,11 +220,28 @@ function App() {
     })
   }
 
+  function restartGame() {
+    setPreviousCategories([]);
+    setRestart(true);
+    sleep(2000).then(() => {
+    setTitle("Welcome to the Trivia Quiz");
+    setRemoveCatCards(false);
+    setRemoveDiffCards(false);
+    setCurrentCategory("");
+    setQuizStart(false);
+    setCurrentDifficulty("");
+    setQuestions([]);
+    setMakeQuestion(false);
+    setTotalScore(0);
+    setRestart(false);
+    })
+  }
+
   // SPA Return Statement
   return (
     <div className="App">
       <Messageboard title={title} message={message} started={quizStart} instructions={instructions}/>
-      {gameOver && <GameOverModal total={totalScore} />}
+      {gameOver && <GameOverModal total={totalScore} restartGame={restartGame}/>}
       <div
         className={
           removeDiffCards === true ? "double-card-container" : (removeCatCards === false ? "card-container" : "single-card-container")
@@ -231,6 +251,7 @@ function App() {
           <CategoryCard
             key={index}
             id={index}
+            restart={restart}
             text={category[0]} // Displays what is on the card
             endpointtext={category[1]} // Text for use on the API endpoint for the category
             chooseCategory={chooseCategory} // Function to handle category selection

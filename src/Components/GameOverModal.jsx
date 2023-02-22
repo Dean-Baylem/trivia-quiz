@@ -3,6 +3,10 @@ import "./gameovermodal.css";
 
 function GameOverModal(props) {
 
+  function handleRestart() {
+    props.restartGame();
+  }
+
     return (
       <div className="overlay">
         <div className="popup">
@@ -14,7 +18,7 @@ function GameOverModal(props) {
           </div>
           <div>
             <button>Save Score</button>
-            <button>Restart Game</button>
+            <button onClick={handleRestart}>Restart Game</button>
           </div>
         </div>
       </div>
@@ -22,3 +26,4 @@ function GameOverModal(props) {
 }
 
 export default GameOverModal;
+

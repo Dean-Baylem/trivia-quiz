@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./categoryCard.css";
 
 function CategoryCard(props) {
@@ -9,6 +9,12 @@ function CategoryCard(props) {
         setChosen(true);
         props.chooseCategory(props.endpointtext, props.text);
     }
+
+    useEffect(() => {
+      if (props.restart === true) {
+        setChosen(false);
+      }
+    })
 
     return (
       <div
