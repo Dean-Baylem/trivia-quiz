@@ -12,10 +12,10 @@
 
 .diff-btn{
 font-weight: 200;
-font-size: 20px;
-color: #F2F7A1;
-background-color: #453C67;
-padding: 10px 30px;
+font-size: 1.75rem;
+color: #000000;
+background-color: #CEEDC7;
+background-image: url("https://www.transparenttextures.com/patterns/cross-scratches.png");
 border: none;
 box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 border-radius: 20px;
@@ -32,10 +32,9 @@ margin: 2%;
 .diff-btn:hover{
 
 transition : 1336ms;
-padding: 10px 27px;
 transform : translateY(-0px);
 background-color: #fff;
-color: #0066cc;
+color: #000000;
 border: none;
 }
 

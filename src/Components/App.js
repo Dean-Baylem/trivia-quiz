@@ -10,7 +10,8 @@ function App() {
   
   // States for use in Messageboard Component
   const [title, setTitle] = useState("Welcome to the Trivia Quiz");
-  const [message, setMessage] = useState("Select one of the categories below, then select a difficulty from; easy, medium or hard. After this you will be shown 10 questions to answer. Good luck!");
+  const [message, setMessage] = useState("");
+  const [instructions, setInstructions] = useState("");
   
   // States for Quiz Start Procedure
   const [removeCatCards, setRemoveCatCards] = useState(false);
@@ -73,6 +74,14 @@ function App() {
       setMessage("Total Score: " + totalScore);
     } else {
       setMessage("Current Round Score: " + score + " / 10")
+    }
+  });
+
+  useEffect(() => {
+    if (removeCatCards === true) {
+      setInstructions("Easy: 1 point / Medium: 2 points / Hard: 3 points")
+    } else {
+      setInstructions("Select one of the categories below, then select a difficulty from; easy, medium or hard. After this you will be shown 10 questions to answer. Good luck!")
     }
   });
 
@@ -211,7 +220,7 @@ function App() {
   // SPA Return Statement
   return (
     <div className="App">
-      <Messageboard title={title} message={message} started={quizStart}/>
+      <Messageboard title={title} message={message} started={quizStart} instructions={instructions}/>
       {gameOver && <GameOverModal total={totalScore} />}
       <div
         className={

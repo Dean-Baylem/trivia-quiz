@@ -14,7 +14,7 @@ function CategoryCard(props) {
       <div
         className={
           props.used === true
-            ? "removed-card btn"
+            ? "removed-card"
             : chosen === false
             ? props.remove === true
               ? "removed-card"

@@ -1,9 +1,9 @@
 .btn{
 font-weight: 200;
-font-size: 20px;
-color: #fff;
-background-color: #091687;
-padding: 10px 30px;
+font-size: 1.75rem;
+color: #000000;
+background-color: #CEEDC7;
+background-image: url("https://www.transparenttextures.com/patterns/cross-scratches.png");
 border: none;
 box-shadow: rgb(82, 80, 80) 1px -1px 14px -3px;
 border-radius: 20px;
@@ -20,7 +20,6 @@ justify-content: center;
 .btn:hover{
 
 transition : 631ms;
-padding: 10px 27px;
 transform : translateY(-0px);
 background-color: #f2f2f2;
 color: #0d0d0d;

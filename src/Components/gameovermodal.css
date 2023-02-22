@@ -8,12 +8,15 @@
   transition: opacity 500ms;
 }
 .popup {
+  font-size: 1.5rem;
   margin: 70px auto;
   padding: 20px;
   background: #fff;
   border-radius: 5px;
   width: 30%;
   position: relative;
+  top: 25%;
+  text-align: center;
 }
 
 .popup h2 {

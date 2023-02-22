@@ -20,7 +20,7 @@ function DifficultyCard(props) {
             : "difficulty-card diff-btn"
         }
       >
-        <h5>{props.text}</h5>
+        <p>{props.text}</p>
       </div>
     );
 }

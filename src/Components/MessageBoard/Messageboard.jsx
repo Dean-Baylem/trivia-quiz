@@ -12,9 +12,7 @@ function Messageboard(props) {
         </div>
         <div>
           {!props.started && <h5 className="instructions">
-            Select one of the categories below, then select a difficulty from;
-            easy, medium or hard. After this you will be shown 10 questions to
-            answer. Good luck!
+            {props.instructions}
           </h5>}
         </div>
       </div>
