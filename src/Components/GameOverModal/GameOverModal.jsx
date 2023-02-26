@@ -47,7 +47,7 @@ function GameOverModal(props) {
                 { saved === true ? <p>Your score of {props.total} has been saved!</p> : <p>Your total score is {props.total}! Congratulations!</p>}
               </div>
               <div>
-                {!saved && <button className="modal-btn" onClick={handleSave}>Save Score</button>}
+//                 {!saved && <button className="modal-btn" onClick={handleSave}>Save Score</button>}
                 <button className="modal-btn" onClick={handleRestart}>Restart Game</button>
               </div>
             </div>
