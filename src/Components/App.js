@@ -111,7 +111,7 @@ function App() {
   
 
   function getQuestions(APIDifficulty) {
-    let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=1&" + APIDifficulty;
+    let url = "https://the-trivia-api.com/api/questions?" + APICategory + "&limit=10&" + APIDifficulty;
     console.log(url);
     fetch(url).then((response) => response.json()).then((data) => setQuestions(data));
   }
@@ -138,7 +138,7 @@ function App() {
     let diff = endPointDiff(text);
     getQuestions(diff);
     setCurrentDifficulty(text);
-    sleep(1000).then(() => {
+    sleep(750).then(() => {
       setQuizStart(true)
       setMakeQuestion(true);
       setMessage("");
@@ -165,29 +165,29 @@ function App() {
           return prevValue + 3;
         } 
       });
-      if (questionIndex === 0) {
-        sleep(1000).then(() => {
+      if (questionIndex === 9) {
+        sleep(750).then(() => {
           returnToTitle();
         });
       } else {
         setQuestionIndex((prevValue) => {
           return prevValue + 1;
         });
-        sleep(1000).then(() => {
+        sleep(750).then(() => {
           setMakeQuestion(true);
         });
       }
     } else {
       console.log("Oh no! :(");
-      if (questionIndex === 0) {
-        sleep(1000).then(() => {
+      if (questionIndex === 9) {
+        sleep(750).then(() => {
           returnToTitle();
         });
       } else {
       setQuestionIndex((prevValue) => {
         return prevValue + 1;
       });
-      sleep(1000).then(() => {
+      sleep(750).then(() => {
         setMakeQuestion(true);
       });
     }
@@ -197,7 +197,7 @@ function App() {
   // This function returns user to the category choice screen and resets the states
   // That control the flow of the game in preparation of the next round.
   function returnToTitle() {
-    sleep(1000).then(() => {
+    sleep(750).then(() => {
       setQuizStart(false);
       setPreviousCategories((prevValue) => {
         return [...prevValue, currentCategory];
@@ -215,7 +215,7 @@ function App() {
 
   // Function to be used for various tests as required.
   function testClick() {
-    sleep(1000).then(() => {
+    sleep(750).then(() => {
       setGameOver(true);
     })
   }
