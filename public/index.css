@@ -22,6 +22,18 @@ code {
   column-gap: 1%;
 }
 
+@media (max-width: 768px) {
+.card-container {
+  grid-template-columns: 3fr 3fr;
+}
+}
+
+@media (max-width: 480px) {
+.card-container {
+  grid-template-columns: 3fr;
+}
+}
+
 /* Container After Cat Selection - Before Difficulty Selection*/
 .single-card-container {
   margin: 5% 10%;
